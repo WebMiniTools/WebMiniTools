@@ -1,1 +1,1 @@
-www.webminitools.com
+https://www.webminitools.com
