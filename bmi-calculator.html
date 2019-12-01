@@ -39,7 +39,7 @@
 				
         <!-- Main App Section -->
         <div class="row d-flex justify-content-center" style="padding-top: 10px;">
-          <div class="col-md-4 text-center">
+          <div class="col-md-6 text-center">
             <div style="background-color: #2D2B2C; border: 0.5px solid white; border-radius: 5px;">
               <button id="standardBtn" type="button" style="margin-top: 1rem; margin-bottom: 0.25rem; line-height: 1.1; font-size: 91%; border-radius: 1rem;" class="btn btn-primary btn-md" onclick="showStandard()">US Units</button>
 							<button id="metricBtn" type="button" style="margin-top: 1rem; margin-bottom: 0.25rem; line-height: 1.1; font-size: 91%; border-radius: 1rem;" class="btn btn-secondary btn-md" onclick="showMetric()">Metric Units</button>
@@ -53,49 +53,74 @@
 								td{
 									padding-top: 5px;
 									padding-bottom: 5px;
+									padding-right: 10px;
+									padding-left: 10px;
 								}
-
-								input::-webkit-input-placeholder{
-									color:red !important;
-								}
-								
-								input:-moz-placeholder {
-									color:red !important;
-								}	
 							</style>
 							<div class="container">
 								<table style="margin-bottom: 15px; color: white; width:100%;">
-									<tr>
+									<tr id="feetRow">
 										<td>Height:</td>
 										<td>
-											<div class="input-group mb-1">
-												<input style="margin-left: 3%;" id="feet" class="form-control" type="text">
-												<div class="input-group-append">
-													<span id="feetLabel" class="input-group-text">feet</span>
-												</div>
-											</div>				
+											<select id="feet" class="form-control form-control-sm" value="5">
+												<option>4</option>
+												<option selected="selected">5</option>
+												<option>6</option>
+												<option>7</option>
+												<option>8</option>
+											</select>				
+										</td>
+										<td width="140px">
+											<span id="feetLabel">Feet</span>
 										</td>
 									</tr>
-									<tr>
+									<tr id="cmRow">
+										<td>Height:</td>
+										<td>
+											<input type="range" min="100" max="250" value="180" class="slider" id="myRangeCm">
+										</td>
+										<td width="140px">
+											<span id="cms"></span> Centimeters
+										</td>
+									</tr>
+									<tr id="inchesRow">
 										<td></td>
 										<td>
-											<div id="inchesLabel" class="input-group mb-1">
-												<input style="margin-left: 3%;" id="inches" class="form-control col-md-12" type="text">
-												<div class="input-group-append">
-													<span class="input-group-text">inches</span>
-												</div>
-											</div>
+											<select id="inches" class="form-control form-control-sm" value="7">
+												<option>0</options>
+												<option>1</option>
+												<option>2</option>
+												<option>3</option>
+												<option>4</option>
+												<option>5</option>
+												<option>6</option>
+												<option selected="selected">7</option>
+												<option>8</option>
+												<option>9</option>
+												<option>10</option>
+												<option>11</option>
+											</select>				
+										</td>
+										<td width="140px">
+											<span>Inches</span>
 										</td>
 									</tr>
-									<tr style="padding-top: 1px; padding-bottom: 2px;">
+									<tr id="poundsRow" style="padding-top: 1px; padding-bottom: 2px;">
 										<td>Weight:</td>
 										<td>
-											<div class="input-group mb-1">
-												<input style="margin-left: 3%;" id="pounds" class="form-control col-md-12" type="text">
-												<div class="input-group-append">
-													<span id="poundsLabel" class="input-group-text">pounds</span>
-												</div>
-											</div>
+											<input type="range" min="80" max="250" value="172" class="slider" id="myRangePounds">
+										</td>
+										<td width="140px">
+											<span id="pounds"></span> Pounds
+										</td>
+									</tr>
+									<tr id="kgsRow" style="padding-top: 1px; padding-bottom: 2px;">
+										<td>Weight:</td>
+										<td>
+											<input type="range" min="30" max="120" value="78" class="slider" id="myRangeKgs">
+										</td>
+										<td width="140px">
+											<span id="kgs"></span> Kilograms
 										</td>
 									</tr>
 								</table>
@@ -112,7 +137,7 @@
 
 							<p class="lead" style="color: white; font-size: 24px; text-align: left; margin-left: 1rem; margin-top: 0.8rem;">BMI = <span style="font-size: 32px; color: #00ABDC;" id="result">0.0</span> Kg/m<span style="position: relative;bottom: 1ex;font-size: 80%;">2</span></p>
 
-							<p id="resultView" class="lead" style="color: white; font-size: 16px; text-align: left; margin-left: 1rem; margin-top: 5.38rem;">Underweight: BMI < 18.5<br>Normal Weight: BMI 18.5 - 24.9<br>Overweight: BMI 25 - 29.9<br>Obesity: BMI >= 30</p>
+							<p id="resultView" class="lead" style="color: white; font-size: 16px; text-align: left; margin-left: 1rem; margin-top: 2.9rem;">Underweight: BMI < 18.5<br>Normal Weight: BMI 18.5 - 24.9<br>Overweight: BMI 25 - 29.9<br>Obesity: BMI >= 30</p>
 						</div>
 					</div>
         </div>
@@ -137,32 +162,48 @@
 
 		<!-- Custom App Javascript -->
 		<script>
+			document.getElementById("cmRow").hidden = true;
+			document.getElementById("kgsRow").hidden = true;
 			var isUSMetric = true;
+
+			// Function slider
+			var slider1 = document.getElementById("myRangePounds");
+			var output1 = document.getElementById("pounds");
+			output1.innerHTML = slider1.value;
+
+			slider1.oninput = function() {
+				output1.innerHTML = this.value;
+			}
+
+			var slider2 = document.getElementById("myRangeCm");
+			var output2 = document.getElementById("cms");
+			output2.innerHTML = slider2.value;
+
+			slider2.oninput = function() {
+				output2.innerHTML = this.value;
+			}
+
+			var slider3 = document.getElementById("myRangeKgs");
+			var output3 = document.getElementById("kgs");
+			output3.innerHTML = slider3.value;
+
+			slider3.oninput = function() {
+				output3.innerHTML = this.value;
+			}
 
 			function showStandard() {
 				isUSMetric = true;
 				document.getElementById("standardBtn").className = "btn btn-primary   btn-md";
 				document.getElementById("metricBtn").className   = "btn btn-secondary btn-md";
 				
-				document.getElementById("inchesLabel").hidden         = false;
-				document.getElementById("resultView").style      = "color: white; font-size: 16px; text-align: left; margin-left: 1rem; margin-top: 5.38rem;"
+				document.getElementById("resultView").style      = "color: white; font-size: 16px; text-align: left; margin-left: 1rem; margin-top: 2.9rem;"
 
-				document.getElementById("result").innerHTML      = "0.0";
-				document.getElementById("pounds").value          = "";
-				document.getElementById("feet").value            = "";
-				document.getElementById("inches").value          = "";
+				document.getElementById("feetRow").hidden        = false;
+				document.getElementById("inchesRow").hidden      = false;
+				document.getElementById("poundsRow").hidden      = false;
 
-				document.getElementById("feetLabel").innerHTML   = "feet";
-				document.getElementById("inchesLabel").hidden    = false;
-				document.getElementById("poundsLabel").innerHTML = "pounds";
-
-				document.getElementById("feet").style            = "margin-left: 3%;";
-				document.getElementById("inches").style          = "margin-left: 3%;";
-				document.getElementById("pounds").style          = "margin-left: 3%;";
-
-				document.getElementById("feet").placeholder      = "";
-				document.getElementById("inches").placeholder    = "";
-				document.getElementById("pounds").placeholder    = "";
+				document.getElementById("cmRow").hidden          = true;
+				document.getElementById("kgsRow").hidden         = true;
 			}
 
 			function showMetric() {
@@ -170,133 +211,71 @@
 				document.getElementById("standardBtn").className = "btn btn-secondary btn-md";
 				document.getElementById("metricBtn").className   = "btn btn-primary   btn-md";
 				
-				document.getElementById("inchesLabel").hidden         = true;
-				document.getElementById("resultView").style      = "color: white; font-size: 16px; text-align: left; margin-left: 1rem; margin-top: 2.735rem;"
+				document.getElementById("resultView").style      = "color: white; font-size: 16px; text-align: left; margin-left: 1rem; margin-top: -1.1rem;";
 
-				document.getElementById("result").innerHTML      = "0.0";
-				document.getElementById("pounds").value          = "";
-				document.getElementById("feet").value            = "";
-				document.getElementById("inches").value          = "";
+				document.getElementById("feetRow").hidden        = true;
+				document.getElementById("inchesRow").hidden      = true;
+				document.getElementById("poundsRow").hidden      = true;
 
-				document.getElementById("feetLabel").innerHTML   = "cm";
-				document.getElementById("inchesLabel").hidden    = true;
-				document.getElementById("poundsLabel").innerHTML = "kg";
-
-				document.getElementById("feet").style            = "margin-left: 3%;";
-				document.getElementById("inches").style          = "margin-left: 3%;";
-				document.getElementById("pounds").style          = "margin-left: 3%;";
-
-				document.getElementById("feet").placeholder      = "";
-				document.getElementById("inches").placeholder    = "";
-				document.getElementById("pounds").placeholder    = "";
-			}
-
-			function checkForm() {
-				var calculateFeet = true;
-				var calculateInches = true;
-				var calculatePounds = true;
-
-				if(!document.getElementById("feet").value && isUSMetric){
-					document.getElementById("feet").style="margin-left: 3%; border: red solid 2px;"
-					document.getElementById("feet").placeholder = "required field";
-					calculateFeet = false;
-					console.log("in check form required field for feet" + calculateFeet);
-				} else if(!document.getElementById("feet").value && !isUSMetric) {
-					document.getElementById("feet").style="margin-left: 3%; border: red solid 2px;"
-					document.getElementById("feet").placeholder = "required field";
-					calculateFeet = false;
-					console.log("in check form required field for centimeters" + calculateFeet);
-				} else {
-					document.getElementById("feet").style = "margin-left: 3%;";
-					console.log("in check form required field for feet/inches" + calculateFeet);
-				}
-
-				if((document.getElementById("feet").value).match(/[a-z]/i) && isUSMetric){
-					var res = document.getElementById("feet").value + " positive numbers only";
-					document.getElementById("feet").style = "margin-left: 3%; border: red solid 2px;"
-					document.getElementById("feet").value = "";
-					document.getElementById("feet").placeholder = res;
-					calculateFeet = false;
-				} else if((document.getElementById("feet").value).match(/[a-z]/i) && !isUSMetric) {
-					var res = document.getElementById("feet").value + " positive numbers only";
-					document.getElementById("feet").style = "margin-left: 3%; border: red solid 2px;"
-					document.getElementById("feet").value = "";
-					document.getElementById("feet").placeholder = res;
-					calculateFeet = false;
-				} else {
-					document.getElementById("feet").style = "margin-left: 3%;";
-				}
-
-				if(!document.getElementById("inches").value && isUSMetric){
-					document.getElementById("inches").style="margin-left: 3%; border: red solid 2px;"
-					document.getElementById("inches").placeholder = "required field";
-					calculateInches = false;
-				} else {
-					document.getElementById("inches").style = "margin-left: 3%;";
-				}
-
-				if((document.getElementById("inches").value).match(/[a-z]/i) && isUSMetric){
-					var res = document.getElementById("inches").value + " positive numbers only";
-					document.getElementById("inches").style = "margin-left: 3%; border: red solid 2px;"
-					document.getElementById("inches").value = "";
-					document.getElementById("inches").placeholder = res;
-					calculateInches = false;
-				} else {
-					document.getElementById("inches").style = "margin-left: 3%;";
-				}
-
-				if(!document.getElementById("pounds").value && isUSMetric){
-					document.getElementById("pounds").style="margin-left: 3%; border: red solid 2px;"
-					document.getElementById("pounds").placeholder = "required field";
-					calculatePounds = false;
-				} else if(!document.getElementById("pounds").value && !isUSMetric) {
-					document.getElementById("pounds").style="margin-left: 3%; border: red solid 2px;"
-					document.getElementById("pounds").placeholder = "required field";
-					calculatePounds = false;
-				} else {
-					document.getElementById("pounds").style = "margin-left: 3%;";
-				}
-
-				if((document.getElementById("pounds").value).match(/[a-z]/i) && isUSMetric){
-					var res = document.getElementById("pounds").value + " positive numbers only";
-					document.getElementById("pounds").style = "margin-left: 3%; border: red solid 2px;"
-					document.getElementById("pounds").value = "";
-					document.getElementById("pounds").placeholder = res;
-					calculatePounds = false;
-				} else if((document.getElementById("pounds").value).match(/[a-z]/i) && !isUSMetric) {
-					var res = document.getElementById("pounds").value + " positive numbers only";
-					document.getElementById("pounds").style = "margin-left: 3%; border: red solid 2px;"
-					document.getElementById("pounds").value = "";
-					document.getElementById("pounds").placeholder = res;
-					calculatePounds = false;
-				} else {
-					document.getElementById("pounds").style = "margin-left: 3%;";
-				}
-				
-				console.log("In checkForm, calculateFeet: " + calculateFeet + " calculateInches: " + calculateInches+ " calculatePounds: " + calculatePounds);
-				return [calculateFeet, calculateInches, calculatePounds];
+				document.getElementById("cmRow").hidden          = false;
+				document.getElementById("kgsRow").hidden         = false;
 			}
 
 			function calculateBMI() {
-				validationArr = checkForm();
-				console.log("In calculateBMI, calculateFeet: " + validationArr[0] + " calculateInches: " + validationArr[1] + " calculatePounds: " + validationArr[2]);
-				if(validationArr[0] && validationArr[1] && validationArr[2]) {
-					if(isUSMetric) {
-						bmi = Math.round((((document.getElementById("pounds").value) * 703) / 
-															(((document.getElementById("feet").value    * 12)  + (document.getElementById("inches").value * 1))  * 
-															((document.getElementById("feet").value    * 12)  + (document.getElementById("inches").value * 1))) * 10)) / 10;
-					} else {
-						bmi = Math.round((((document.getElementById("pounds").value) * 1)    / 
-															((document.getElementById("feet").value    / 100)   * 
-															(document.getElementById("feet").value    / 100))) * 10) / 10;
-					}
-
-					document.getElementById("result").innerHTML = bmi;
+				if(isUSMetric) {
+					var p   = parseInt(document.getElementById("pounds").innerHTML);
+					var f   = (document.getElementById("feet").value * 12)  + (document.getElementById("inches").value * 1);
+					bmi = Math.round(((p * 703) / ( f * f)) * 10) / 10;
+				} else {
+					var k   = parseInt(document.getElementById("kgs").innerHTML);
+					var c   = parseInt(document.getElementById("cms").innerHTML) / 100;
+					bmi = Math.round(((k) / (c * c)) * 10) / 10;
 				}
+
+				document.getElementById("result").innerHTML = bmi;
 			}
 		</script>
+		<!-- Range Slider Styles-->
+		<style>
+			.slidecontainer {
+				width: 100%;
+			}
 
-    <!-- Bootstrap Styles -->
+			.slider {
+				-webkit-appearance: none;
+				width: 100%;
+				height: 10px;
+				border-radius: 5px;
+				background: #6C757D;
+				outline: none;
+				opacity: 0.7;
+				-webkit-transition: .2s;
+				transition: opacity .2s;
+			}
+
+			.slider:hover {
+				opacity: 1;
+			}
+
+			.slider::-webkit-slider-thumb {
+				-webkit-appearance: none;
+				appearance: none;
+				width: 20px;
+				height: 20px;
+				border-radius: 50%;
+				background: #00ABDC;
+				cursor: pointer;
+			}
+
+			.slider::-moz-range-thumb {
+				width: 20px;
+				height: 20px;
+				border-radius: 50%;
+				background: #00ABDC;
+				cursor: pointer;
+			}
+		</style>
+    <!-- Bootstrap Styles   -->
     <div>
     	<style>
         /*!
